@@ -1,9 +1,13 @@
 package com.alansparrow.android.godstime;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +25,9 @@ public class GodActivity extends ActionBarActivity {
 	//private Timer mTimer = new Timer();
 	//private CountMinute mCounter = new CountMinute(this); 
 	private MediaPlayer mp;
-	CountDownTimer mCdt;
+	private CountDownTimer mCdt;
+	private PowerManager mPowerManager;
+	private WakeLock mWakeLock;
 	
 	private void resetTime(int minutes) {
 		// TODO Auto-generated method stub
@@ -60,6 +66,7 @@ public class GodActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_god);
+		
 		
 		mp = MediaPlayer.create(this, R.raw.s1);
 		
@@ -102,4 +109,36 @@ public class GodActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	mWakeLock.release();
+    }
+	
+	@Override
+    public void onStart() {
+    	super.onStart();
+    }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+    }
+    
+    @Override
+    public void onResume() {
+    	super.onResume();
+    	mPowerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
+    	mWakeLock.acquire();
+    }
+    
+    @Override
+    public void onStop() {
+    	super.onStop();
+    }
+	
+	
+    
 }
